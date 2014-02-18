@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>devartemz</groupId>
+    <artifactId>graphx</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <spark.version>0.9.0-incubating</spark.version>
+        <scala.version>2.10.3</scala.version>
+        <specs2.version>1.12.4.1</specs2.version>
+        <junit.version>4.11</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+            <version>${spark.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-graphx_2.10</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming_2.10</artifactId>
+            <version>${spark.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2_2.9.2</artifactId>
+            <version>${specs2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.14.1</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <argLine>-Xms256m -Xmx512m -XX:PermSize=64M -XX:MaxPermSize=256m</argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <recompileMode>incremental</recompileMode>
+                    <jvmArgs>
+                        <jvmArg>-Xms256m</jvmArg>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/output/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>Spray repository</id>
+            <url>http://repo.spray.io/</url>
+        </repository>
+
+        <repository>
+            <id>repository.cloudera.com</id>
+            <name>repository.cloudera.com-releases</name>
+            <url>https://repository.cloudera.com/artifactory/datanucleus</url>
+        </repository>
+
+        <repository>
+            <id>Ubix</id>
+            <name>Ubix-releases</name>
+            <url>http://repository.ubix.io:8081/artifactory/ext-release-local</url>
+        </repository>
+
+        <repository>
+            <id>clojars.org</id>
+            <url>http://clojars.org/repo</url>
+        </repository>
+
+        <repository>
+            <id>cloudera-repo</id>
+            <name>Cloudera Repository</name>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+
+        <repository>
+            <id>akka</id>
+            <name>Akka repository</name>
+            <url>http://repo.akka.io/releases/</url>
+        </repository>
+    </repositories>
+
+</project>
